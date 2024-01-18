@@ -6,14 +6,32 @@ const DoctorSchema = new mongoose.Schema({
         required: true,
         unique:true
     },
+    email:{
+        type: String,
+        required: true,
+        unique: true
+    },
+    password:{
+        type: String,
+        require: true
+    },
+    salt:{
+        type: String,
+        required: true
+    },
     fachgebiet:{
         type: String,
         required: true,
-        unique:true
+        unique: false
     },
     Erfahrung:{
         type: Number,
-        required: true
+        unique: false
+    }, 
+    role:{
+        type: String,
+        default: "doctor",
+        unique: false
     },
 },{timestamps: true})
 

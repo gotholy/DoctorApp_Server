@@ -1,15 +1,15 @@
 import Doctor from "../models/doctor.model.js"
 
-export const createDoctor = async (req, res, next) =>{
-    const newDoctor = new Doctor(req.body)
+// export const createDoctor = async (req, res, next) =>{
+//     const newDoctor = new Doctor(req.body)
 
-    try {
-        const savedDoctor = await newDoctor.save()
-        res.status(200).json(savedDoctor)
-    } catch (error) {
-        next(err)
-    }
-}
+//     try {
+//         const savedDoctor = await newDoctor.save()
+//         res.status(200).json(savedDoctor)
+//     } catch (error) {
+//         next(error)
+//     }
+// }
 
 export const updateDoctor = async (req,res,next)=> {
     try {
@@ -42,6 +42,6 @@ export const getDoctors = async (req,res,next) => {
         const doctors = await Doctor.find()
         res.status(200).json(doctors)
     } catch (error) {
-        next(err)
+        next(error)
     }
 }

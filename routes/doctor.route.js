@@ -1,12 +1,15 @@
 import express from "express"
-import { createDoctor, deleteDoctor, getDoctor, getDoctors, updateDoctor } from "../controller/doctor.controller.js"
+import { deleteDoctor, getDoctor, getDoctors, updateDoctor } from "../controller/doctor.controller.js"
+import { doctorRegister, doctorLogin } from "../controller/auth.controller.js"
 
 const router = express.Router()
 
 // CREATE
-router.post("/", createDoctor)
+router.post("/doctorregister",  doctorRegister)
+// LOGIN 
+router.post("/doctorlogin", doctorLogin)
 // UPDATE
-router.put("/:id", updateDoctor)
+router.put("/:id",  updateDoctor)
 // DELETE 
 router.delete("/:id", deleteDoctor)
 // GET 

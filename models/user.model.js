@@ -17,6 +17,10 @@ const UserSchema = new mongoose.Schema({
     birthday:{
         type: Date
     },
+    role:{
+        type: String,
+        default: "user"
+    },
 },{timestamps: true})
 
 export default mongoose.model("User", UserSchema)

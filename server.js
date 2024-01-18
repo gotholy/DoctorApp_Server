@@ -5,7 +5,7 @@ import cors from "cors"
 import cookieParser from "cookie-parser"
 import "dotenv/config"
 import doctorsRoute from "./routes/doctor.route.js"
-import authRouter from "./routes/auth.route.js"
+import userRoute from "./routes/user.route.js"
 const app = express()
 
 // Function to handle Error on MongoDB connection
@@ -30,9 +30,8 @@ app.use(cors({
     credentials: true
 }))
 
-
+app.use("/api/users", userRoute)
 app.use("/api/doctors", doctorsRoute)
-app.use("/api/auth", authRouter)
 
 //ErrorHandler
 app.use((err, req, res, next)=>{

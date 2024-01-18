@@ -1,8 +1,9 @@
 import User from "../models/user.model.js"
+import Doctor from "../models/doctor.model.js"
 import {createError} from "../utils/error.js"
 import {createHash, createSalt, createToken} from "../utils/verify.js"
 
-export async function login(req,res, next){
+export async function userLogin(req,res, next){
     try {
         const user = await User.findOne({email: req.body.email})
         if(!user) return next(createError(404),"User not found")
@@ -20,7 +21,7 @@ export async function login(req,res, next){
     }
 }
 
-export async function register(req, res, next) {
+export async function userRegister(req, res, next) {
 
 try {
     const dbUser = await User.findOne({email: req.body.email})
@@ -34,4 +35,38 @@ try {
     next(err)
 }
     
+}
+export async function doctorRegister(req, res, next) {
+
+try {
+    const dbDoctor = await Doctor.findOne({email: req.body.email})
+    if(dbDoctor) return next(createError(404,"User not found!")).end()
+    const newDoctor = new Doctor(req.body)
+    newDoctor.salt=createSalt()
+    newDoctor.password=createHash(newDoctor.password, newDoctor.salt)
+    await newDoctor.save()
+    res.status(201).send("Doctor has been created")
+} catch (err) {
+    next(err)
+}
+    
+}
+
+export async function doctorLogin(req,res, next){
+    try {
+        const doctor = await Doctor.findOne({email: req.body.email })
+        console.log(doctor);
+        if(!doctor) return next(createError(404),"Doctor not found")
+        if(doctor.password !== createHash(req.body.password, doctor.salt))
+            return next(createError(400), "Wrong password or email")
+
+            const token = createToken({ doctor: doctor._id})
+
+            res.cookie("doctorappauth", token, {
+                httpOnly: true,
+                secure: true
+            }).status(200).send("Perfect Doctor has been Logged in")
+    } catch (err) {
+        next(err)
+    }
 }
