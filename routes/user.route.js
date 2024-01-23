@@ -5,7 +5,7 @@ import { userRegister, userLogin } from "../controller/auth.controller.js"
 const router = express.Router()
 
 // CREATE
-router.post("/",  userRegister)
+router.post("/userregister",  userRegister)
 // LOGIN
 router.post("/userlogin", userLogin)
 // UPDATE

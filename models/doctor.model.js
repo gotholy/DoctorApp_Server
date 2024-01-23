@@ -19,12 +19,12 @@ const DoctorSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    fachgebiet:{
+    speciality:{
         type: String,
         required: true,
         unique: false
     },
-    Erfahrung:{
+    experience:{
         type: Number,
         unique: false
     }, 
