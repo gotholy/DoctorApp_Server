@@ -20,7 +20,7 @@ export function createSalt() {
 export function verifyToken(req, res, next) {
     const token = req.cookies.doctorappauth;
     if (!token) {
-        return next(createError(403, "You are not authenticated verify token."));
+        return next(createError(403, "You are not authenticated pls log in."));
     }
     jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
         if (err) {
