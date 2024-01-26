@@ -10,13 +10,32 @@ export async function userLogin(req,res, next){
         if(user.password !== createHash(req.body.password, user.salt))
             return next(createError(400, "Wrong password or email"))
 
-            const token = createToken({ user: user._id})
+            const token = createToken({ user: user._id, role: user.role})
 
             res.cookie("doctorappauth", token, {
                 httpOnly: true,
                 secure: true
-            }).status(200).send("Perfect User has been Logged in")
+            }).status(200).json({ message: "Perfect User has been Logged in", email: user.email, role: user.role})
     } catch (err) {
+        next(err)
+    }
+}
+
+export async function doctorLogin(req,res, next){
+    try {
+        const doctor = await Doctor.findOne({email: req.body.email })
+        if(!doctor) return next(createError(404,"Doctor not found"))
+        if(doctor.password !== createHash(req.body.password, doctor.salt))
+            return next(createError(400, "Wrong password or email"))
+
+            const token = createToken({ user: doctor._id, role: doctor.role})
+
+            res.cookie("doctorappauth", token, {
+                httpOnly: true,
+                secure: true
+            }).status(200).json({ message: "Perfect Doctor has been Logged in", email: doctor.email, role: doctor.role})
+    } catch (err) {
+        console.error();
         next(err)
     }
 }
@@ -34,14 +53,16 @@ try {
 } catch (err) {
     next(createError(500, "Failed to create user!"))
 }
-    
+
+
+
 }
 export async function doctorRegister(req, res, next) {
-
-try {
-    const dbDoctor = await Doctor.findOne({email: req.body.email})
-    if(dbDoctor) return next(createError(409,"Profil exists already!"))
-    const newDoctor = new Doctor(req.body)
+    
+    try {
+        const dbDoctor = await Doctor.findOne({email: req.body.email})
+        if(dbDoctor) return next(createError(409,"Profil exists already!"))
+        const newDoctor = new Doctor(req.body)
     newDoctor.salt=createSalt()
     newDoctor.password=createHash(newDoctor.password, newDoctor.salt)
     await newDoctor.save()
@@ -49,24 +70,7 @@ try {
 } catch (err) {
     next(createError(500, "Failed to create Doctor!"))
 }
-    
+
 }
 
-export async function doctorLogin(req,res, next){
-    try {
-        const doctor = await Doctor.findOne({email: req.body.email })
-        if(!doctor) return next(createError(404,"Doctor not found"))
-        if(doctor.password !== createHash(req.body.password, doctor.salt))
-            return next(createError(400, "Wrong password or email"))
 
-            const token = createToken({ doctor: doctor._id})
-
-            res.cookie("doctorappauth", token, {
-                httpOnly: true,
-                secure: true
-            }).status(200).json({ message: "Perfect Doctor has been Logged in"})
-    } catch (err) {
-        console.error();
-        next(err)
-    }
-}
